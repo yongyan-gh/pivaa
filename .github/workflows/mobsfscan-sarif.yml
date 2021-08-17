@@ -12,11 +12,24 @@ jobs:
     steps:
     - name: Checkout the code
       uses: actions/checkout@v2
+      
     - name: mobsfscan
       uses: MobSF/mobsfscan@main
       with:
         args: '. --sarif --output results.sarif || true'
+        
     - name: Upload mobsfscan report
       uses: github/codeql-action/upload-sarif@v1
       with:
+        sarif_file: results.sarif
+
+    - name: Expose report
+      uses: actions/upload-artifact@v2
+      with:
+        name: SARIF results
+        path: results.sarif
+        
+    - uses: github/codeql-action/upload-sarif@v1
+      with:
+        # Path to SARIF file relative to the root of the repository
         sarif_file: results.sarif
